@@ -15,7 +15,7 @@ class TwentyOnesTest extends FreeSpec with Matchers {
       score(Hand(List(Two, Three))) shouldBe 5
     }
     "scores 10 for a two, a three and a five" in {
-      score(Hand(List(Ten, Two))) shouldBe 10
+      score(Hand(List(Two, Three, Five))) shouldBe 10
     }
     "scores 30 for a jack, a ten and a queen" in {
       score(Hand(List(Jack, Ten, Queen))) shouldBe 30

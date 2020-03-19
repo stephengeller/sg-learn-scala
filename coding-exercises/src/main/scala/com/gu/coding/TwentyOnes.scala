@@ -5,7 +5,7 @@ object TwentyOnes {
     println(args(0))
   }
 
-  def score(hand: Hand): Int = ???
+  def score(hand: Hand): Int = hand.cards.map(card => rankValue(card)).sum
 
   def rankValue(rank: Rank): Int = {
     rank match {
@@ -25,8 +25,6 @@ object TwentyOnes {
       case Ace   => 11
     }
   }
-
-  val mappings: Map[Rank, Int] = ???
 
 }
 
