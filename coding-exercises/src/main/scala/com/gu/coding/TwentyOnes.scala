@@ -26,6 +26,7 @@ object TwentyOnes {
     }
   }
 
+  def hasBlackjack(initialHand: Hand): Boolean = score(initialHand) == 21
 }
 
 case class Hand(cards: List[Rank])

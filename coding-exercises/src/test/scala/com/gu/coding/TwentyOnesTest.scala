@@ -21,4 +21,20 @@ class TwentyOnesTest extends FreeSpec with Matchers {
       score(Hand(List(Jack, Ten, Queen))) shouldBe 30
     }
   }
+
+  "hasBlackjack" - {
+    "returns true if blackjack with jack and ace" in {
+      hasBlackjack(Hand(List(Jack, Ace))) shouldBe true
+    }
+
+    "returns true if 21 with 10 and ace" in {
+      hasBlackjack(Hand(List(Ten, Ace)))
+    }
+    "returns false if 21 with jack, five and six" in {
+      hasBlackjack(Hand(List(Jack, Five, Six)))
+    }
+    "returns false if not blackjack with five and six" in {
+      hasBlackjack(Hand(List(Five, Six)))
+    }
+  }
 }
