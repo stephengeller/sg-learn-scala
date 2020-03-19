@@ -2,10 +2,22 @@ package com.gu.coding
 
 object TwentyOnes {
   def main(args: Array[String]): Unit = {
-    println(args(0))
+    // Start
+    val game = initialState()
+    val winner = run(game)
+    println(winner)
   }
 
-  def score(hand: Hand): Int = hand.cards.map(card => rankValue(card)).sum
+  def initialState(): Game = {
+    val deck = Deck(List(One, Jack, Two, Four, Ace))
+    val (sam1, deck1) = drawCard(Hand(Nil), deck)
+    val (dealer1, deck2) = drawCard(Hand(Nil), deck1)
+    val (sam2, deck3) = drawCard(sam1, deck2)
+    val (dealer2, deck4) = drawCard(dealer1, deck3)
+    Game(sam2, dealer2, deck4)
+  }
+
+  def score(hand: Hand): Int = hand.cards.map(rankValue).sum
 
   def rankValue(rank: Rank): Int = {
     rank match {
@@ -27,11 +39,19 @@ object TwentyOnes {
   }
 
   def hasBlackjack(initialHand: Hand): Boolean = score(initialHand) == 21
+
+  def drawCard(hand: Hand, deck: Deck): (Hand, Deck) = ???
+
+  def run(game: Game): String = ???
 }
+
+case class Game(sam: Hand, dealer: Hand, deck: Deck)
+
+case class Deck(cards: List[Rank])
 
 case class Hand(cards: List[Rank])
 
-case class Card(rank: Rank)
+//case class Card(rank: Rank)
 
 sealed trait Rank
 object One extends Rank
