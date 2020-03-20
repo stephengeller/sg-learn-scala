@@ -5,7 +5,7 @@ object TwentyOnes {
     // Start
     val game = initialState()
     val winner = run(game)
-    println(winner)
+    println(s"The winner is $winner")
   }
 
   def initialState(): Game = {
@@ -38,9 +38,15 @@ object TwentyOnes {
     }
   }
 
-  def hasBlackjack(initialHand: Hand): Boolean = score(initialHand) == 21
+  def hasBlackjack(initialHand: Hand): Boolean =
+    score(initialHand) == 21 && initialHand.cards.length == 2
 
-  def drawCard(hand: Hand, deck: Deck): (Hand, Deck) = ???
+  def drawCard(hand: Hand, deck: Deck): (Hand, Deck) = {
+    val cardDrawn = deck.cards.head
+    val newHand: Hand = Hand(cardDrawn :: hand.cards)
+    val newDeck: Deck = Deck(deck.cards.slice(1, deck.cards.length))
+    (newHand, newDeck)
+  }
 
   def run(game: Game): String = ???
 }

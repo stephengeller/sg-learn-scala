@@ -28,13 +28,26 @@ class TwentyOnesTest extends FreeSpec with Matchers {
     }
 
     "returns true if 21 with 10 and ace" in {
-      hasBlackjack(Hand(List(Ten, Ace)))
+      hasBlackjack(Hand(List(Ten, Ace))) shouldBe true
     }
     "returns false if 21 with jack, five and six" in {
-      hasBlackjack(Hand(List(Jack, Five, Six)))
+      hasBlackjack(Hand(List(Jack, Five, Six))) shouldBe false
     }
     "returns false if not blackjack with five and six" in {
-      hasBlackjack(Hand(List(Five, Six)))
+      hasBlackjack(Hand(List(Five, Six))) shouldBe false
+    }
+  }
+
+  "drawCard" - {
+    "removes top card of deck and places it into hand" in {
+      val (hand, deck) = drawCard(Hand(Nil), Deck(List(Jack, Queen, Two)))
+      hand shouldBe Hand(List(Jack))
+      deck shouldBe Deck(List(Queen, Two))
+    }
+    "cannot draw card if deck is empty" in {
+      assertThrows[NoSuchElementException] {
+        drawCard(Hand(Nil), Deck(Nil))
+      }
     }
   }
 }
