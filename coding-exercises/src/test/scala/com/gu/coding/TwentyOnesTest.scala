@@ -50,4 +50,51 @@ class TwentyOnesTest extends FreeSpec with Matchers {
       }
     }
   }
+
+  "drawSam" - {
+    "removes top card of deck" in {
+      val before = Game(Hand(Nil), Hand(Nil), Deck(List(Jack, Queen, Two)))
+      drawSam(before).deck shouldBe Deck(List(Queen, Two))
+    }
+    "puts top card into Sam's hand" in {
+      val before = Game(Hand(Nil), Hand(Nil), Deck(List(Jack, Queen, Two)))
+      drawSam(before).sam shouldBe Hand(List(Jack))
+    }
+
+    "puts top 2 cards into Sam's hand" in {
+      val before = Game(Hand(Nil), Hand(Nil), Deck(List(Queen, Four)))
+      drawSam(drawSam(before)).sam shouldBe Hand(List(Queen, Four))
+    }
+
+    "cannot draw card if deck is empty" in {
+      val before = Game(Hand(Nil), Hand(Nil), Deck(Nil))
+      assertThrows[NoSuchElementException] {
+        drawSam(before)
+      }
+    }
+  }
+
+  "drawDealer" - {
+    val startingDeck = Deck(List(Seven, Five, Three))
+    "removes top card of deck" in {
+      val before = Game(Hand(Nil), Hand(Nil), startingDeck)
+      drawDealer(before).deck shouldBe Deck(List(Five, Three))
+    }
+    "puts top card into dealer's hand" in {
+      val before = Game(Hand(Nil), Hand(Nil), startingDeck)
+      drawDealer(before).dealer shouldBe Hand(List(Seven))
+    }
+
+    "puts top 2 cards into dealer's hand" in {
+      val before = Game(Hand(Nil), Hand(Nil), startingDeck)
+      drawDealer(drawDealer(before)).dealer shouldBe Hand(List(Seven, Five))
+    }
+
+    "cannot draw card if deck is empty" in {
+      val before = Game(Hand(Nil), Hand(Nil), Deck(Nil))
+      assertThrows[NoSuchElementException] {
+        drawDealer(before)
+      }
+    }
+  }
 }

@@ -1,6 +1,8 @@
 package com.gu.coding
 
 object TwentyOnes {
+  val initialDeck = List(One, Jack, Two, Four, Ace)
+
   def main(args: Array[String]): Unit = {
     // Start
     val game = initialState()
@@ -9,12 +11,26 @@ object TwentyOnes {
   }
 
   def initialState(): Game = {
-    val deck = Deck(List(One, Jack, Two, Four, Ace))
-    val (sam1, deck1) = drawCard(Hand(Nil), deck)
-    val (dealer1, deck2) = drawCard(Hand(Nil), deck1)
-    val (sam2, deck3) = drawCard(sam1, deck2)
-    val (dealer2, deck4) = drawCard(dealer1, deck3)
-    Game(sam2, dealer2, deck4)
+    val start = Game(Hand(Nil), Hand(Nil), Deck(initialDeck))
+    val startGame
+      : Game => Game = drawSam _ andThen drawDealer _ andThen drawSam _ andThen drawDealer _
+    startGame(start)
+  }
+
+  def drawSam(game: Game): Game = {
+    val cardDrawn = game.deck.cards.head
+    game.copy(
+      sam = Hand(game.sam.cards :+ cardDrawn),
+      deck = Deck(game.deck.cards.tail)
+    )
+  }
+
+  def drawDealer(game: Game): Game = {
+    val cardDrawn = game.deck.cards.head
+    game.copy(
+      dealer = Hand(game.dealer.cards :+ cardDrawn),
+      deck = Deck(game.deck.cards.tail)
+    )
   }
 
   def score(hand: Hand): Int = hand.cards.map(rankValue).sum
@@ -48,7 +64,11 @@ object TwentyOnes {
     (newHand, newDeck)
   }
 
-  def run(game: Game): String = ???
+  def run(game: Game): String = {
+    val (sam, dealer, deck) = (game.sam, game.dealer, game.deck)
+//    while (true) {}
+    "Sam"
+  }
 }
 
 case class Game(sam: Hand, dealer: Hand, deck: Deck)
