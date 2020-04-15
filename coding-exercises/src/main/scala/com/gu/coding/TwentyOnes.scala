@@ -1,5 +1,7 @@
 package com.gu.coding
 
+import scala.annotation.tailrec
+
 object TwentyOnes {
   val initialDeck = List(One, Jack, Two, Four, Ace)
 
@@ -11,10 +13,8 @@ object TwentyOnes {
   }
 
   def initialState(): Game = {
-    val start = Game(Hand(Nil), Hand(Nil), Deck(initialDeck))
-    val startGame
-      : Game => Game = drawSam _ andThen drawDealer _ andThen drawSam _ andThen drawDealer _
-    startGame(start)
+    val start = Game(Hand(Nil), Hand(Nil), Deck(initialDeck), None)
+    drawSam(drawDealer(drawSam(drawDealer(start))))
   }
 
   def drawSam(game: Game): Game = {
@@ -64,20 +64,39 @@ object TwentyOnes {
     (newHand, newDeck)
   }
 
+  def playTurn(game: Game): Game = {
+    if (hasBlackjack(game.sam))
+      game.copy(winner = Some("Sam"))
+    else if (hasBlackjack(game.dealer))
+      game.copy(winner = Some("Dealer"))
+    else if (score(game.sam) < 17)
+      drawSam(game)
+    else if (score(game.sam) > 21)
+      game.copy(winner = Some("Dealer"))
+    else if (score(game.dealer) < score(game.sam))
+      drawDealer(game)
+    else if (score(game.dealer) > 21)
+      game.copy(winner = Some("Sam"))
+    else
+      game.copy(winner = Some("Dealer"))
+  }
+
+  @tailrec
   def run(game: Game): String = {
-    val (sam, dealer, deck) = (game.sam, game.dealer, game.deck)
-//    while (true) {}
-    "Sam"
+    val result = playTurn(game)
+
+    result.winner match {
+      case Some(winner) => winner
+      case None         => run(result)
+    }
   }
 }
 
-case class Game(sam: Hand, dealer: Hand, deck: Deck)
+case class Game(sam: Hand, dealer: Hand, deck: Deck, winner: Option[String])
 
 case class Deck(cards: List[Rank])
 
 case class Hand(cards: List[Rank])
-
-//case class Card(rank: Rank)
 
 sealed trait Rank
 object One extends Rank
